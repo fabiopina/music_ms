@@ -1,0 +1,57 @@
+version: "3"
+services:
+  ms-db:
+    image: mariadb
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ribeiro
+  users:
+    image: users-ms
+    expose:
+      - "5000"
+    links:
+      - ms-db
+      - eureka
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+  songs:
+    image: songs-ms
+    expose:
+      - "5001"
+    links:
+      - ms-db
+      - eureka
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+  playlists:
+    image: playlists-ms
+    expose:
+      - "5002"
+    links:
+      - ms-db
+      - zuul
+      - eureka
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+      - SONGSADDRESS=songs:5001
+  auth:
+    image: auth-ms
+    expose:
+      - "5003"
+    links:
+      - eureka
+      - zuul
+    environment:
+      - USERSADDRESS=users:5000
+  aggr:
+    image: aggr-ms
+    expose:
+      - "5004"
+    links:
+      - eureka
+      - zuul
+    environment:
+      - PLAYLISTSADDRESS=playlists:5002
+      - SONGSADDRESS=songs:5001
+
