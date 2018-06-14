@@ -7,7 +7,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=ribeiro
   users:
-    image: users-ms
+    image: fabiopina151/registerwitheureka_users-ms:0.1
     expose:
       - "5000"
     links:
@@ -15,7 +15,7 @@ services:
     environment:
       - DATABASEADDRESS=ms-db:3306
   songs:
-    image: songs-ms
+    image: fabiopina151/registerwitheureka_songs-ms:0.1
     expose:
       - "5001"
     links:
@@ -23,7 +23,7 @@ services:
     environment:
       - DATABASEADDRESS=ms-db:3306
   playlists:
-    image: playlists-ms
+    image: fabiopina151/registerwitheureka_playlists-ms:0.1
     expose:
       - "5002"
     links:
@@ -33,7 +33,7 @@ services:
       - DATABASEADDRESS=ms-db:3306
       - SONGSADDRESS=songs:5001
   auth:
-    image: auth-ms
+    image: fabiopina151/registerwitheureka_auth-ms:0.1
     expose:
       - "5003"
     links:
@@ -41,7 +41,7 @@ services:
     environment:
       - USERSADDRESS=users:5000
   aggr:
-    image: aggr-ms
+    image: fabiopina151/registerwitheureka_aggr-ms:0.1
     expose:
       - "5004"
     links:
