@@ -1,0 +1,63 @@
+version: "3"
+services:
+  ms-db:
+    image: mariadb
+    deploy: 
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=ribeiro
+  users:
+    image: fabiopina151/users-ms:latest
+    deploy: 
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+  songs:
+    image: fabiopina151/songs-ms:latest
+    deploy: 
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+  playlists:
+    image: fabiopina151/playlists-ms:latest
+    deploy: 
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "5002:5002"
+    environment:
+      - DATABASEADDRESS=ms-db:3306
+      - SONGSADDRESS=songs:5001
+  auth:
+    image: fabiopina151/auth-ms:latest
+    deploy: 
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "5003:5003"
+    environment:
+      - USERSADDRESS=users:5000
+  aggr:
+    image: fabiopina151/aggr-ms:latest
+    deploy: 
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "5004:5004"
+    environment:
+      - PLAYLISTSADDRESS=playlists:5002
+      - SONGSADDRESS=songs:5001
+
